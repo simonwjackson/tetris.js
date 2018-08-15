@@ -65,3 +65,18 @@ const drawMatrix = (matrix, offset) => {
 }
 
 update(player)
+
+document.addEventListener('keydown', ({ key }) => {
+  switch (key) { 
+    case "ArrowLeft":
+      player.pos.x--
+    break
+    case "ArrowRight":
+      player.pos.x++
+    break
+    case "ArrowDown":
+      player.pos.y++ 
+      dropCounter = 0
+    break
+  }
+})
