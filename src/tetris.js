@@ -1,3 +1,11 @@
+/* HOTFIX: Parcel full reload for canvas */
+if (module.hot) {
+    module.hot.dispose(() => {
+        window.location.reload();
+        throw 'whatever'
+    })
+}
+ 
 import './main.css'
 
 const canvas = document.getElementById('tetris')
@@ -13,11 +21,15 @@ const matrix = [
   [0, 1, 0]
 ]
 
-matrix.map((row, y) => {
-  row.map((value, x) => {
-    if (value !== 0) {
-      context.fillStyle = 'hsl(226, 96%, 56%)'
-      context.fillRect(x, y, 1, 1)
-    }
+const drawMatrix = () => { 
+  matrix.map((row, y) => {
+    row.map((value, x) => {
+      if (value !== 0) {
+        context.fillStyle = 'hsl(226, 96%, 56%)'
+        context.fillRect(x, y, 1, 1)
+      }
+    })
   })
-})
+}
+
+drawMatrix()
