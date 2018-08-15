@@ -6,19 +6,31 @@ if (module.hot) {
   })
 }
 
-import './hotfix'
 import './main.css'
+import { createMatrix } from './utils'
+import { hasCollision } from './core'
 
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
-
-context.scale(20, 20)
-
+const arena = createMatrix(12, 20)
 const matrix = [
   [0, 0, 0],
   [1, 1, 1],
   [0, 1, 0]
 ]
+const player = {
+  pos: {
+    x: 5,
+    y: 5
+  },
+  matrix
+}
+
+let dropCounter = 0
+let dropInterval = 1000
+let lastDraw = 0
+
+context.scale(20, 20)
 
 const merge = (arena, player) => {
   player.matrix.map((row, y) => {
@@ -28,26 +40,15 @@ const merge = (arena, player) => {
   })
 }
 
-const createMatrix = (w, h) => {
-  const matrix = []
-  while (h--) {
-    matrix.push(new Array(w).fill(0))
-  }
-  return matrix 
-}
-
-const arena = createMatrix(12, 20)
-
-const player = {
-  pos: {
-    x: 5,
-    y: 5
-  },
-  matrix
-}
-
 const playerDrop = () => {
   player.pos.y++
+
+  if (hasCollision(arena, player)) {
+    player.pos.y--
+    merge(arena, player)
+    player.pos.y = 0
+  }
+
   dropCounter = 0
 }
 
@@ -56,10 +57,6 @@ const draw = player => {
   context.fillRect(0, 0, canvas.width, canvas.height)
   drawMatrix(player.matrix, player.pos)
 }
-
-let dropCounter = 0
-let dropInterval = 1000
-let lastDraw = 0
 
 const update = (player, time = 0) => {
   const deltaTimeDraw = time - lastDraw
@@ -83,18 +80,25 @@ const drawMatrix = (matrix, offset) => {
   })
 }
 
-update(player)
+const bindControls = player => { 
+  document.addEventListener('keydown', ({ key }) => {
+    switch (key) {
+      case "ArrowLeft":
+        player.pos.x--
+        break
+      case "ArrowRight":
+        player.pos.x++
+        break
+      case "ArrowDown":
+        playerDrop()
+        break
+    }
+  }) 
+}
 
-document.addEventListener('keydown', ({ key }) => {
-  switch (key) {
-    case "ArrowLeft":
-      player.pos.x--
-      break
-    case "ArrowRight":
-      player.pos.x++
-      break
-    case "ArrowDown":
-      playerDrop()
-      break
-  }
-})
+const init = () => {
+  bindControls(player)
+}
+
+init() 
+update(player)
