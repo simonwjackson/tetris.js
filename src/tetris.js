@@ -82,14 +82,21 @@ const drawMatrix = (matrix, offset) => {
   })
 }
 
+const move = direction => {
+  player.pos.x += direction
+  if (hasCollision(arena, player))
+    player.pos.x -= direction
+}
+
 const bindControls = player => { 
   document.addEventListener('keydown', ({ key }) => {
     switch (key) {
       case "ArrowLeft":
-        player.pos.x--
+        move(-1)
         break
       case "ArrowRight":
-        player.pos.x++
+        move(1)
+        // player.pos.x++
         break
       case "ArrowDown":
         playerDrop()
