@@ -14,12 +14,29 @@ const context = canvas.getContext('2d')
 
 context.scale(20, 20)
 
-
 const matrix = [
   [0, 0, 0],
   [1, 1, 1],
   [0, 1, 0]
 ]
+
+const merge = (arena, player) => {
+  player.matrix.map((row, y) => {
+    row.map((value, x) => {
+      if (value !== 0) arena[y + player.pos.y][x + player.pos.x] = value
+    })
+  })
+}
+
+const createMatrix = (w, h) => {
+  const matrix = []
+  while (h--) {
+    matrix.push(new Array(w).fill(0))
+  }
+  return matrix 
+}
+
+const arena = createMatrix(12, 20)
 
 const player = {
   pos: {
@@ -27,6 +44,11 @@ const player = {
     y: 5
   },
   matrix
+}
+
+const playerDrop = () => {
+  player.pos.y++
+  dropCounter = 0
 }
 
 const draw = player => {
@@ -41,13 +63,10 @@ let lastDraw = 0
 
 const update = (player, time = 0) => {
   const deltaTimeDraw = time - lastDraw
-  lastDraw = time 
+  lastDraw = time
 
   dropCounter += deltaTimeDraw
-  if (dropCounter > dropInterval) {
-    player.pos.y++
-    dropCounter = 0
-  }
+  if (dropCounter > dropInterval) playerDrop()
 
   draw(player)
   requestAnimationFrame(update.bind(null, player))
@@ -67,16 +86,15 @@ const drawMatrix = (matrix, offset) => {
 update(player)
 
 document.addEventListener('keydown', ({ key }) => {
-  switch (key) { 
+  switch (key) {
     case "ArrowLeft":
       player.pos.x--
-    break
+      break
     case "ArrowRight":
       player.pos.x++
-    break
+      break
     case "ArrowDown":
-      player.pos.y++ 
-      dropCounter = 0
-    break
+      playerDrop()
+      break
   }
 })
