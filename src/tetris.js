@@ -8,22 +8,22 @@ if (module.hot) {
 
 import './main.css'
 import { createMatrix } from './utils'
-import { hasCollision } from './core'
+import { hasCollision, createPiece } from './core'
 
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 const arena = createMatrix(12, 20)
-const matrix = [
-  [0, 0, 0],
-  [1, 1, 1],
-  [0, 1, 0]
-]
+// const matrix = [
+//   [0, 0, 0],
+//   [1, 1, 1],
+//   [0, 1, 0]
+// ]
 const player = {
   pos: {
     x: 5,
     y: 5
   },
-  matrix
+  matrix: createPiece('I')
 }
 
 let dropCounter = 0
@@ -46,6 +46,7 @@ const playerDrop = () => {
   if (hasCollision(arena, player)) {
     player.pos.y--
     merge(arena, player)
+    playerReset()
     player.pos.y = 0
   }
 
@@ -90,7 +91,7 @@ const move = direction => {
 
 const rotate = (matrix, direction) => {
   for (let yIdx = 0; yIdx < matrix.length; ++yIdx) {
-    for (let xIdx = 0; xIdx < yIdx; ++xIdx) { 
+    for (let xIdx = 0; xIdx < yIdx; ++xIdx) {
       [
         matrix[xIdx][yIdx],
         matrix[yIdx][xIdx]
@@ -132,6 +133,19 @@ const playerRotate = direction => {
   //     return
   //   }
   // }
+}
+
+const playerReset = () => {
+  const pieces = 'ILJOTSZ'
+  player.matrix = createPiece(pieces[pieces.length * Math.random() | 0])
+  player.pos.y = 0
+  player.pos.x = (arena[0].length / 2 | 0) - 
+                 (player.matrix[0].length / 2 | 0)
+
+  // Clear Screen
+  if (hasCollision(arena, player)) {
+    arena.map(row => row.fill(0))
+  }
 }
 
 const bindControls = player => {

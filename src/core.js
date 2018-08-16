@@ -1,3 +1,57 @@
+export const createPiece = type => {
+  switch (type) {
+    case "O":
+      return [
+        [1, 1],
+        [1, 1],
+      ]
+      break
+
+    case "Z":
+      return [
+        [1, 1, 0],
+        [0, 1, 1],
+        [0, 0, 0]
+      ]
+      break
+
+
+    case "S":
+      return [
+        [0, 1, 1],
+        [1, 1, 0],
+        [0, 0, 0]
+      ]
+      break
+
+    case "J":
+      return [
+        [0, 1, 0],
+        [0, 1, 0],
+        [1, 1, 0]
+      ]
+      break
+
+    case "I":
+      return [
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0]
+      ]
+      break
+
+
+    case "T": 
+      return [
+        [0, 0, 0],
+        [1, 1, 1],
+        [0, 1, 0]
+      ]
+      break
+  }
+}
+
 export const hasCollision = (arena, player) => {
   const m = player.matrix
   const o = player.pos
