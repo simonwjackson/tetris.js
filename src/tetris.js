@@ -19,11 +19,6 @@ const colors = [
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 const arena = createMatrix(12, 20)
-// const matrix = [
-//   [0, 0, 0],
-//   [1, 1, 1],
-//   [0, 1, 0]
-// ]
 const player = {
   pos: {
     x: 5,
@@ -37,6 +32,20 @@ let dropInterval = 1000
 let lastDraw = 0
 
 context.scale(20, 20)
+
+const arenaSweep = () => {
+  outer: for (let y = arena.length - 1; y > 0; --y) {
+    for (let x = 0; x < arena[y].length; ++x) {
+      if (arena[y][x] === 0) {
+        continue outer;
+      }
+    }
+
+    const row = arena.splice(y, 1)[0].fill(0)
+    arena.unshift(row)
+    ++y
+  }
+}
 
 const merge = (arena, player) => {
   player.matrix.map((row, y) => {
@@ -53,6 +62,7 @@ const playerDrop = () => {
     player.pos.y--
     merge(arena, player)
     playerReset()
+    arenaSweep()
     player.pos.y = 0
   }
 
@@ -148,8 +158,8 @@ const playerReset = () => {
 
   player.matrix = createPiece(letter)
   player.pos.y = 0
-  player.pos.x = (arena[0].length / 2 | 0) - 
-                 (player.matrix[0].length / 2 | 0)
+  player.pos.x = (arena[0].length / 2 | 0) -
+    (player.matrix[0].length / 2 | 0)
 
   // Clear Screen
   if (hasCollision(arena, player)) {
