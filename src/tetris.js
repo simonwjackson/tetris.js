@@ -21,10 +21,11 @@ const context = canvas.getContext('2d')
 const arena = createMatrix(12, 20)
 const player = {
   pos: {
-    x: 5,
-    y: 5
+    x: 0,
+    y: 0
   },
-  matrix: createPiece('I')
+  matrix: null,
+  score: 0
 }
 
 let dropCounter = 0
@@ -34,6 +35,7 @@ let lastDraw = 0
 context.scale(20, 20)
 
 const arenaSweep = () => {
+  let rowCount = 1
   outer: for (let y = arena.length - 1; y > 0; --y) {
     for (let x = 0; x < arena[y].length; ++x) {
       if (arena[y][x] === 0) {
@@ -44,7 +46,10 @@ const arenaSweep = () => {
     const row = arena.splice(y, 1)[0].fill(0)
     arena.unshift(row)
     ++y
-  }
+
+    player.score += rowCount * 10 
+    rowCount *= 2
+  } 
 }
 
 const merge = (arena, player) => {
@@ -63,10 +68,15 @@ const playerDrop = () => {
     merge(arena, player)
     playerReset()
     arenaSweep()
+    updateScore(player.score)
     player.pos.y = 0
   }
 
   dropCounter = 0
+}
+
+const updateScore = score => {
+  document.getElementById('score').innerHTML = score
 }
 
 const draw = player => {
@@ -164,13 +174,13 @@ const playerReset = () => {
   // Clear Screen
   if (hasCollision(arena, player)) {
     arena.map(row => row.fill(0))
+    player.score = 0
+    updateScore()
   }
 }
 
 const bindControls = player => {
   document.addEventListener('keydown', ({ key }) => {
-    console.log(key)
-
     switch (key) {
       case "ArrowLeft":
         move(-1)
@@ -193,6 +203,8 @@ const bindControls = player => {
 
 const init = () => {
   bindControls(player)
+  playerReset()
+  updateScore(player.score)
 }
 
 init()
