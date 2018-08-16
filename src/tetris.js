@@ -7,9 +7,15 @@ if (module.hot) {
 }
 
 import './main.css'
-import { createMatrix } from './utils'
+import { createMatrix, rand } from './utils'
 import { hasCollision, createPiece } from './core'
 
+const colors = [
+  null,
+  'hsl(203, 100%, 67%)',
+  'hsl(226, 96%, 56%)',
+  'hsl(0, 0%, 99%)'
+]
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 const arena = createMatrix(12, 20)
@@ -76,7 +82,7 @@ const drawMatrix = (matrix, offset) => {
   matrix.map((row, y) => {
     row.map((value, x) => {
       if (value !== 0) {
-        context.fillStyle = 'hsl(226, 96%, 56%)'
+        context.fillStyle = colors[value]
         context.fillRect(x + offset.x, y + offset.y, 1, 1)
       }
     })
@@ -137,7 +143,10 @@ const playerRotate = direction => {
 
 const playerReset = () => {
   const pieces = 'ILJOTSZ'
-  player.matrix = createPiece(pieces[pieces.length * Math.random() | 0])
+  const num = rand(0, pieces.length - 1)
+  const letter = pieces[num]
+
+  player.matrix = createPiece(letter)
   player.pos.y = 0
   player.pos.x = (arena[0].length / 2 | 0) - 
                  (player.matrix[0].length / 2 | 0)
