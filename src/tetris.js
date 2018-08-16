@@ -88,26 +88,79 @@ const move = direction => {
     player.pos.x -= direction
 }
 
-const bindControls = player => { 
+const rotate = (matrix, direction) => {
+  for (let yIdx = 0; yIdx < matrix.length; ++yIdx) {
+    for (let xIdx = 0; xIdx < yIdx; ++xIdx) { 
+      [
+        matrix[xIdx][yIdx],
+        matrix[yIdx][xIdx]
+      ] = [
+          matrix[yIdx][xIdx],
+          matrix[xIdx][yIdx]
+        ]
+    }
+  }
+
+  if (direction > 0) matrix.map(r => r.reverse())
+  else matrix.reverse()
+}
+
+const playerRotate = direction => {
+  const pos = player.pos.x
+  let offset = 1
+  rotate(player.matrix, direction)
+
+  while (hasCollision(arena, player)) {
+    player.pos.x += offset
+    offset = -(offset + (offset > 0 ? 1 : -1))
+    if (offset > player.matrix[0].length) {
+      rotate(player.matrix, -dir)
+      player.pos.x = pos
+      return
+    }
+  }
+  // const { x: pos } = player.pos
+  // let offset = 1
+  // rotate(player.matrix, direction) 
+  // console.table(hasCollision(arena, matrix))
+  // while (hasCollision(arena, matrix)) {
+  //   player.pos.x += offset
+  //   offset = -(offset + (offset > 0 ? 1 : -1))
+  //   if (offset > player.matrix[0].length) {
+  //     rotate(player.matrix, -dir)
+  //     player.pos.x = pos
+  //     return
+  //   }
+  // }
+}
+
+const bindControls = player => {
   document.addEventListener('keydown', ({ key }) => {
+    console.log(key)
+
     switch (key) {
       case "ArrowLeft":
         move(-1)
         break
       case "ArrowRight":
         move(1)
-        // player.pos.x++
         break
       case "ArrowDown":
         playerDrop()
         break
+      case "q":
+        playerRotate(1)
+        break
+      case "w":
+        playerRotate(-1)
+        break
     }
-  }) 
+  })
 }
 
 const init = () => {
   bindControls(player)
 }
 
-init() 
+init()
 update(player)
