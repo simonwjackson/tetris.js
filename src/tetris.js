@@ -11,13 +11,7 @@ import { createMatrix, rand } from './utils'
 import { hasCollision, createPiece } from './core'
 
 const scale = 20
-const border = scale * .1
-const colors = [
-  null,
-  'hsl(0, 0%, 99%)',
-  'hsl(203, 100%, 67%)',
-  'hsl(226, 96%, 56%)',
-]
+const border = scale * .1 
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 const arena = createMatrix(10, 20)
@@ -30,6 +24,64 @@ const player = {
   score: 0
 }
 
+const themes = Object.seal({
+  ocean: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(203, 100%, 67%)',
+    'hsl(226, 96%, 56%)',
+  ],
+  grass: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(81, 100%, 41%)',
+    'hsl(102, 100%, 33%)', 
+  ],
+  love: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(295, 94%, 73%)',
+    'hsl(301, 100%, 42%)', 
+  ], 
+  xp: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(106, 66%, 58%)',
+    'hsl(225, 97%, 57%)', 
+  ], 
+  berlin: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(135, 91%, 71%)',
+    'hsl(336, 100%, 44%)', 
+  ], 
+  diablo: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(0, 0%, 50%)',
+    'hsl(13, 100%, 47%)', 
+  ], 
+  diablo: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(349, 100%, 32%)',
+    'hsl(252, 100%, 64%)', 
+  ], 
+  usa: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(13, 100%, 47%)',
+    'hsl(225, 97%, 57%)', 
+  ], 
+  crush: [
+    null,
+    'hsl(0, 0%, 99%)',
+    'hsl(33, 93%, 60%)',
+    'hsl(13, 100%, 47%)', 
+  ], 
+})
+
+let colors = themes['love'] 
 let dropCounter = 0
 let dropInterval = 1000
 let lastDraw = 0
