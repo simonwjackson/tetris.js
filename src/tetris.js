@@ -14,9 +14,9 @@ const scale = 20
 const border = scale * .1
 const colors = [
   null,
+  'hsl(0, 0%, 99%)',
   'hsl(203, 100%, 67%)',
   'hsl(226, 96%, 56%)',
-  'hsl(0, 0%, 99%)'
 ]
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
@@ -34,7 +34,7 @@ let dropCounter = 0
 let dropInterval = 1000
 let lastDraw = 0
 
-// context.scale(10, 10)
+const event = new Event('tetris')
 
 const arenaSweep = () => {
   let rowCount = 1
@@ -74,11 +74,12 @@ const playerDrop = () => {
     player.pos.y = 0
   }
 
-  dropCounter = 0
+  dropCounter = 0 
 }
 
-const updateScore = score => {
-  document.getElementById('score').innerHTML = score
+const updateScore = score => { 
+  const tetris = new CustomEvent('tetris', { detail: { score: player.score } });
+  document.body.dispatchEvent(tetris, { detail: score })
 }
 
 const draw = player => {
@@ -116,14 +117,18 @@ const drawSquare = (color, x, y, offset, scale, border) => {
   const startY = (y + offset.y) * scale
   context.fillStyle = color
   context.fillRect(startX, startY, squareSize, squareSize)
-  context.fillStyle = 'white'
+
+  // TL Shadow
+  context.fillStyle = colors[1]
   context.fillRect(startX, startY, 2, 2)
+
+  // Inner Shadow 
   context.fillRect(startX + 2, startY + 2, 2, 4)
   context.fillRect(startX + 2, startY + 2, 4, 2)
 
-  if (color === 'hsl(0, 0%, 99%)') { 
-    context.strokeStyle = colors[1];
-    context.lineWidth = 3;
+  if (color === 'hsl(0, 0%, 99%)') {
+    context.strokeStyle = colors[3];
+    context.lineWidth = 1;
     context.strokeRect(startX + 1, startY + 1, squareSize - 2, squareSize - 2);
   }
 }
