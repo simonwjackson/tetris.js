@@ -9,8 +9,8 @@ export const createPiece = type => {
 
     case "Z":
       return [
-        [2, 2, 0],
-        [0, 2, 2],
+        [1, 1, 0],
+        [0, 1, 1],
         [0, 0, 0]
       ]
       break
@@ -25,9 +25,9 @@ export const createPiece = type => {
 
     case "J":
       return [
-        [0, 1, 0],
-        [0, 1, 0],
-        [1, 1, 0]
+        [0, 3, 0],
+        [0, 3, 0],
+        [3, 3, 0]
       ]
       break 
 
@@ -41,18 +41,18 @@ export const createPiece = type => {
 
     case "I":
       return [
-        [0, 2, 0, 0],
-        [0, 2, 0, 0],
-        [0, 2, 0, 0],
-        [0, 2, 0, 0]
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0],
+        [0, 1, 0, 0]
       ]
       break
 
     case "T": 
       return [
         [0, 0, 0],
-        [3, 3, 3],
-        [0, 3, 0]
+        [1, 1, 1],
+        [0, 1, 0]
       ]
       break
   }

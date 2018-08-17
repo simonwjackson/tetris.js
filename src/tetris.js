@@ -10,6 +10,8 @@ import './main.css'
 import { createMatrix, rand } from './utils'
 import { hasCollision, createPiece } from './core'
 
+const scale = 20
+const border = scale * .1
 const colors = [
   null,
   'hsl(203, 100%, 67%)',
@@ -18,7 +20,7 @@ const colors = [
 ]
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
-const arena = createMatrix(12, 20)
+const arena = createMatrix(10, 20)
 const player = {
   pos: {
     x: 0,
@@ -32,7 +34,7 @@ let dropCounter = 0
 let dropInterval = 1000
 let lastDraw = 0
 
-context.scale(20, 20)
+// context.scale(10, 10)
 
 const arenaSweep = () => {
   let rowCount = 1
@@ -47,9 +49,9 @@ const arenaSweep = () => {
     arena.unshift(row)
     ++y
 
-    player.score += rowCount * 10 
+    player.score += rowCount * 10
     rowCount *= 2
-  } 
+  }
 }
 
 const merge = (arena, player) => {
@@ -83,8 +85,8 @@ const draw = player => {
   context.fillStyle = '#000'
   context.fillRect(0, 0, canvas.width, canvas.height)
 
-  drawMatrix(arena, { x: 0, y: 0 })
-  drawMatrix(player.matrix, player.pos)
+  drawMatrix(arena, { x: 0, y: 0 }) // Existing blocks
+  drawMatrix(player.matrix, player.pos) // Current block
 }
 
 const update = (player, time = 0) => {
@@ -102,11 +104,28 @@ const drawMatrix = (matrix, offset) => {
   matrix.map((row, y) => {
     row.map((value, x) => {
       if (value !== 0) {
-        context.fillStyle = colors[value]
-        context.fillRect(x + offset.x, y + offset.y, 1, 1)
+        drawSquare(colors[value], x, y, offset, scale, border)
       }
     })
   })
+}
+
+const drawSquare = (color, x, y, offset, scale, border) => {
+  const squareSize = scale - border
+  const startX = (x + offset.x) * scale
+  const startY = (y + offset.y) * scale
+  context.fillStyle = color
+  context.fillRect(startX, startY, squareSize, squareSize)
+  context.fillStyle = 'white'
+  context.fillRect(startX, startY, 2, 2)
+  context.fillRect(startX + 2, startY + 2, 2, 4)
+  context.fillRect(startX + 2, startY + 2, 4, 2)
+
+  if (color === 'hsl(0, 0%, 99%)') { 
+    context.strokeStyle = colors[1];
+    context.lineWidth = 3;
+    context.strokeRect(startX + 1, startY + 1, squareSize - 2, squareSize - 2);
+  }
 }
 
 const move = direction => {
