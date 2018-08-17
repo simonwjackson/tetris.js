@@ -5,6 +5,20 @@ body {
   font-family: 'Press Start 2P', cursive; 
 }
 
+select {
+  font-family: 'Press Start 2P', cursive; 
+  background: transparent;
+  border: none;
+  color: inherit;
+  margin-bottom: 1rem;
+  outline: none
+}
+
+option {
+  background-color: transparent;
+  color: black;
+}
+
 body {
   background: #040404;
   height: 100vh;

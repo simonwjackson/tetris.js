@@ -11,13 +11,33 @@
   
   <body>
     <section class='game'> 
+      <label for="theme"> 
+        Theme:
+        <select name="theme" id="theme">
+          <option value="crush">Crush</option>
+          <option value="usa">Usa</option>
+          <option value="deep">Deep</option>
+          <option value="diablo">Diablo</option>
+          <option value="berlin">Berlin</option>
+          <option value="xp">XP</option>
+          <option value="love">Love</option>
+          <option value="ocean">Ocean</option>
+          <option value="grass">Grass</option>
+        </select>
+      </label>
       <div class="score-container">Score:   
         <span id="score"></span>
       </div>
       <canvas id="tetris" width="200" height="400"></canvas>
     </section>
     <script>
-      document.body.addEventListener('tetris', e => { 
+      document.getElementById('theme').addEventListener('change', e => {
+        document.body.dispatchEvent(
+          new CustomEvent('tetris:client', { detail: { theme: e.target.value } })
+        )
+      })
+      
+      document.body.addEventListener('tetris:core', e => { 
         document.getElementById('score').innerHTML = e.detail.score
       }) 
     </script> 

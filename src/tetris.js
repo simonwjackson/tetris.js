@@ -11,7 +11,7 @@ import { createMatrix, rand } from './utils'
 import { hasCollision, createPiece } from './core'
 
 const scale = 20
-const border = scale * .1 
+const border = scale * .1
 const canvas = document.getElementById('tetris')
 const context = canvas.getContext('2d')
 const arena = createMatrix(10, 20)
@@ -35,58 +35,60 @@ const themes = Object.seal({
     null,
     'hsl(0, 0%, 99%)',
     'hsl(81, 100%, 41%)',
-    'hsl(102, 100%, 33%)', 
+    'hsl(102, 100%, 33%)',
   ],
   love: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(295, 94%, 73%)',
-    'hsl(301, 100%, 42%)', 
-  ], 
+    'hsl(301, 100%, 42%)',
+  ],
   xp: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(106, 66%, 58%)',
-    'hsl(225, 97%, 57%)', 
-  ], 
+    'hsl(225, 97%, 57%)',
+  ],
   berlin: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(135, 91%, 71%)',
-    'hsl(336, 100%, 44%)', 
-  ], 
+    'hsl(336, 100%, 44%)',
+  ],
   diablo: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(0, 0%, 50%)',
-    'hsl(13, 100%, 47%)', 
-  ], 
-  diablo: [
+    'hsl(13, 100%, 47%)',
+  ],
+  deep: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(349, 100%, 32%)',
-    'hsl(252, 100%, 64%)', 
-  ], 
+    'hsl(252, 100%, 64%)',
+  ],
   usa: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(13, 100%, 47%)',
-    'hsl(225, 97%, 57%)', 
-  ], 
+    'hsl(225, 97%, 57%)',
+  ],
   crush: [
     null,
     'hsl(0, 0%, 99%)',
     'hsl(33, 93%, 60%)',
-    'hsl(13, 100%, 47%)', 
-  ], 
+    'hsl(13, 100%, 47%)',
+  ],
 })
 
-let colors = themes['love'] 
+let colors = themes['love']
 let dropCounter = 0
 let dropInterval = 1000
 let lastDraw = 0
 
-const event = new Event('tetris')
+document.body.addEventListener('tetris:client', e => {
+  if (e.detail.theme) colors = themes[e.detail.theme]
+})
 
 const arenaSweep = () => {
   let rowCount = 1
@@ -126,12 +128,13 @@ const playerDrop = () => {
     player.pos.y = 0
   }
 
-  dropCounter = 0 
+  dropCounter = 0
 }
 
-const updateScore = score => { 
-  const tetris = new CustomEvent('tetris', { detail: { score: player.score } });
-  document.body.dispatchEvent(tetris, { detail: score })
+const updateScore = score => {
+  document.body.dispatchEvent(
+    new CustomEvent('tetris:core', { detail: { score: player.score } })
+  )
 }
 
 const draw = player => {
@@ -222,6 +225,7 @@ const playerRotate = direction => {
       return
     }
   }
+
   // const { x: pos } = player.pos
   // let offset = 1
   // rotate(player.matrix, direction) 
